@@ -1,0 +1,7 @@
+{
+    "name": "auth project",
+    "db": {
+        "address": "postgres://postgres:password@localhost:5432/authproject"
+    },
+    "jwt_key": "abcdefghijklmnopqrstuvwxyz"
+}
