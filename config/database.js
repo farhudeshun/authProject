@@ -3,7 +3,7 @@ const { Sequelize } = require("sequelize");
 const sequelize = new Sequelize("postgresProject", "postgres", "password", {
   host: "localhost",
   dialect: "postgres",
-  logging: false, // Set to true for debugging SQL queries
+  logging: console.log, // Enable SQL query logging
 });
 
 sequelize

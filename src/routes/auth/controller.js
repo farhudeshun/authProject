@@ -25,7 +25,7 @@ module.exports = new (class extends controller {
 
     this.response({
       res,
-      message: "the user successfuly registered",
+      message: "the user successfully registered",
       data: _.pick(user, ["_id", "name", "email"]),
     });
   }
@@ -36,7 +36,7 @@ module.exports = new (class extends controller {
       return this.response({
         res,
         code: 400,
-        message: "invalid eamil or password",
+        message: "invalid email or password",
       });
     }
     const isValid = await bcrypt.compare(req.body.password, user.password);
@@ -44,10 +44,14 @@ module.exports = new (class extends controller {
       return this.response({
         res,
         code: 400,
-        message: "invalid eamil or password",
+        message: "invalid email or password",
       });
     }
     const token = jwt.sign({ _id: user.id }, config.get("jwt_key"));
-    this.response({ res, message: "successfuly logged in", data: { token } });
+    this.response({
+      res,
+      message: "successfully logged in",
+      data: { token },
+    });
   }
 })();

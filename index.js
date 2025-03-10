@@ -1,23 +1,24 @@
 const express = require("express");
 const app = express();
-const debug = require("debug")("app:main");
 const config = require("config");
 const router = require("./src/routes/");
-const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = new Sequelize("postgresProject", "postgres", "password", {
-  host: "localhost",
-  dialect: "postgres",
-});
+
+const sequelize = require("./config/database");
+
+require("./startup/config")(app, express);
+require("./startup/db")();
+require("./startup/logging")();
 
 sequelize
-  .authenticate()
-  .then(() => console.log("✅ PostgreSQL connected successfully!"))
-  .catch((err) => console.error("❌ Database connection failed:", err.message));
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+  .sync()
+  .then(() => {
+    console.log("✅ Models synced with the database.");
+  })
+  .catch((error) => {
+    console.error("❌ Error syncing models:", error);
+  });
 
 app.use("/api", router);
+
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`litening on port ${port}`));
+app.listen(port, () => console.log(`Listening on port ${port}`));
