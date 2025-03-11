@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 module.exports = new (class extends controller {
   async register(req, res) {
-    let user = await this.User.findOne({ email: req.body.email });
+    let user = await this.User.findOne({ where: { email: req.body.email } });
     if (user) {
       return this.response({
         res,
@@ -31,7 +31,7 @@ module.exports = new (class extends controller {
   }
 
   async login(req, res) {
-    const user = await this.User.findOne({ email: req.body.email });
+    const user = await this.User.findOne({ where: { email: req.body.email } });
     if (!user) {
       return this.response({
         res,
