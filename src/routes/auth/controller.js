@@ -11,13 +11,11 @@ module.exports = new (class extends controller {
       return this.response({
         res,
         code: 400,
-        message: "this user already registered",
+        message: "This user is already registered",
       });
     }
-    // const {email, name, password} = req.body;
-    // user = new this.User({email, name, password});
-    user = new this.User(_.pick(req.body, ["name", "email", "password"]));
 
+    user = new this.User(_.pick(req.body, ["name", "email", "password"]));
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
 
@@ -25,7 +23,7 @@ module.exports = new (class extends controller {
 
     this.response({
       res,
-      message: "the user successfully registered",
+      message: "The user was successfully registered",
       data: _.pick(user, ["_id", "name", "email"]),
     });
   }
@@ -36,21 +34,28 @@ module.exports = new (class extends controller {
       return this.response({
         res,
         code: 400,
-        message: "invalid email or password",
+        message: "Invalid email or password",
       });
     }
+
     const isValid = await bcrypt.compare(req.body.password, user.password);
     if (!isValid) {
       return this.response({
         res,
         code: 400,
-        message: "invalid email or password",
+        message: "Invalid email or password",
       });
     }
-    const token = jwt.sign({ _id: user.id }, config.get("jwt_key"));
+
+    // Generate token with the isadmin flag
+    const token = jwt.sign(
+      { _id: user.id, isadmin: user.isadmin },
+      config.get("jwt_key")
+    );
+
     this.response({
       res,
-      message: "successfully logged in",
+      message: "Successfully logged in",
       data: { token },
     });
   }
